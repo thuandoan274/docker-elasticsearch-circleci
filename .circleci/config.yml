@@ -90,6 +90,3 @@ jobs:
 
             docker build -t $LATEST_TAG image/
             docker push $LATEST_TAG
-
-            git tag $TIMESTAMP
-            git push --tags
