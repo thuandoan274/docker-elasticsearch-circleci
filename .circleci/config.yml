@@ -31,7 +31,8 @@ jobs:
             #   https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-dev-mode
             # here is why to set 'http.host' and 'transport.host'
             #   https://www.elastic.co/guide/en/elasticsearch/reference/5.3/bootstrap-checks.html#_development_vs_production_mode
-            docker run -d -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" $IMAGETAG
+            # docker run -d -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" $IMAGETAG
+            docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" $IMAGETAG
 
       - run:
           name: Install Health Check Utility
