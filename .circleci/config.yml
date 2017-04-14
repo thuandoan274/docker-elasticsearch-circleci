@@ -17,11 +17,11 @@ jobs:
       - setup_remote_docker
 
       - restore_cache:
-        keys:
-          # TODO:
-          # - docker-{{ .Environment.DOCKER_VERSION }}
-          - docker-17.03.0-ce
-          - docker-
+          keys:
+            # TODO:
+            # - docker-{{ .Environment.DOCKER_VERSION }}
+            - docker-17.03.0-ce
+            - docker-
 
       - run:
           name: Install Docker client
@@ -36,11 +36,11 @@ jobs:
             fi
 
       - save_cache:
-        # TODO:
-        # key: docker-{{ .Environment.DOCKER_VERSION }}
-        key: docker-17.03.0-ce
-        paths:
-          - /usr/bin/docker
+          # TODO:
+          # key: docker-{{ .Environment.DOCKER_VERSION }}
+          key: docker-17.03.0-ce
+          paths:
+            - /usr/bin/docker
 
       - run:
           name: Build a docker image from Dockerfile
