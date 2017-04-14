@@ -36,6 +36,8 @@ jobs:
             #   https://www.elastic.co/guide/en/elasticsearch/reference/5.3/bootstrap-checks.html#_development_vs_production_mode
             docker run -d --name $CONTAINER_NAME -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" $IMAGETAG
 
+      - run: docker ps
+
       - run:
           name: Health Check Elasticsearch from primary_container
           environment:
