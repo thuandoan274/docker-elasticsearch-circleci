@@ -6,6 +6,9 @@ jobs:
 
     working_directory: /src/docker-elasticsearch-circleci
 
+    environment:
+      CONTAINER_NAME: es_container
+
     steps:
       - checkout
 
@@ -25,7 +28,6 @@ jobs:
           name: Run A Container to check whether it successfully runs on CI
           environment:
             IMAGETAG: kenju/elasticsearch-circleci:test
-            CONTAINER_NAME: es_container
           command: |
             docker build -t $IMAGETAG image/
             # run docker for development use
@@ -40,7 +42,6 @@ jobs:
             HEALTH_CHECK_RETRY_LIMIT: 20
             HEALTH_CHECK_RETRY_DELAY: 3
             HEALTH_CHECK_PORT: 9200
-            CONTAINER_NAME: es_container
           command: |
             docker run --network container:$CONTAINER_NAME \
               appropriate/curl --retry $HEALTH_CHECK_RETRY_LIMIT \
