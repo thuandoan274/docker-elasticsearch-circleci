@@ -1,4 +1,4 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:5.3.0
+FROM docker.elastic.co/elasticsearch/elasticsearch:5.1.2
 
 ADD elasticsearch.yml /usr/share/elasticsearch/config/
 
