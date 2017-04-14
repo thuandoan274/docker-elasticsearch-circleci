@@ -25,20 +25,14 @@ jobs:
           name: Run A Container to check whether it successfully runs on CI
           environment:
             IMAGETAG: kenju/elasticsearch-circleci:test
+            CONTAINER_NAME: es_container
           command: |
             docker build -t $IMAGETAG image/
             # run docker for development use
             #   https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-dev-mode
             # here is why to set 'http.host' and 'transport.host'
             #   https://www.elastic.co/guide/en/elasticsearch/reference/5.3/bootstrap-checks.html#_development_vs_production_mode
-            # docker run -d -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" $IMAGETAG
-            docker run -d --name es_container -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" $IMAGETAG
-
-      - run:
-          name: Install Health Check Utility
-          command: |
-            apt-get update -qq
-            apt-get install -y netcat
+            docker run -d --name $CONTAINER_NAME -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" $IMAGETAG
 
       - run:
           name: Health Check Elasticsearch from primary_container
@@ -46,8 +40,9 @@ jobs:
             HEALTH_CHECK_RETRY_LIMIT: 20
             HEALTH_CHECK_RETRY_DELAY: 3
             HEALTH_CHECK_PORT: 9200
+            CONTAINER_NAME: es_container
           command: |
-            docker run --network container:es_container \
+            docker run --network container:$CONTAINER_NAME \
               appropriate/curl --retry $HEALTH_CHECK_RETRY_LIMIT \
                                --retry-delay $HEALTH_CHECK_RETRY_DELAY \
                                --retry-connrefused http://localhost:$HEALTH_CHECK_PORT
