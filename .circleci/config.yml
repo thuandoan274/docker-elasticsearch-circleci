@@ -55,17 +55,18 @@ jobs:
       - deploy:
           name: Publish to Docker Hub
           environment:
-            BASETAG: kenju/elasticsearch-circleci
+            BASE_TAG: kenju/elasticsearch-circleci
           command: |
             TIMESTAMP=`date "+%Y%m%d%H%M"`
-            IMAGE_TAG="$BASETAG:$TIMESTAMP"
-            LATEST_TAG="$BASETAG:latest"
+            IMAGE_TAG="$BASE_TAG:$TIMESTAMP"
+            LATEST_TAG="$BASE_TAG:latest"
 
+            docker version
             docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
             docker build -t $IMAGET_TAG image/
             docker push $IMAGE_TAG
             docker build -t $LATEST_TAG image/
             docker push $LATEST_TAG
 
-            git tag TIMESTAMP
-            git push --tags
+            # git tag $TIMESTAMP
+            # git push --tags
