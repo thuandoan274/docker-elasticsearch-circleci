@@ -8,7 +8,7 @@ jobs:
 
     environment:
       CONTAINER_NAME: es_container
-      IMAGETAG: kenju/elasticsearch-circleci:test
+      IMAGE_TAG_TEST: kenju/elasticsearch-circleci:test
 
     steps:
       - checkout
@@ -27,7 +27,7 @@ jobs:
 
       - run:
           name: Build a docker image from Dockerfile
-          command: docker build -t $IMAGETAG image/
+          command: docker build -t $IMAGE_TAG_TEST image/
 
       - run:
           name: Run a container from the image
@@ -36,7 +36,7 @@ jobs:
             #   https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-dev-mode
             # here is why to set 'http.host' and 'transport.host'
             #   https://www.elastic.co/guide/en/elasticsearch/reference/5.3/bootstrap-checks.html#_development_vs_production_mode
-            docker run -d --name $CONTAINER_NAME -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" $IMAGETAG
+            docker run -d --name $CONTAINER_NAME -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" $IMAGE_TAG_TEST
 
       - run: docker ps
 
@@ -51,3 +51,21 @@ jobs:
               appropriate/curl --retry $HEALTH_CHECK_RETRY_LIMIT \
                                --retry-delay $HEALTH_CHECK_RETRY_DELAY \
                                --retry-connrefused http://localhost:$HEALTH_CHECK_PORT
+
+      - deploy:
+          name: Publish to Docker Hub
+          environment:
+            BASETAG: kenju/elasticsearch-circleci
+          command: |
+            TIMESTAMP=`date "+%Y%m%d%H%M"`
+            IMAGE_TAG="$BASETAG:$TIMESTAMP"
+            LATEST_TAG="$BASETAG:latest"
+
+            docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+            docker build -t $IMAGET_TAG image/
+            docker push $IMAGE_TAG
+            docker build -t $LATEST_TAG image/
+            docker push $LATEST_TAG
+
+            git tag TIMESTAMP
+            git push --tags
