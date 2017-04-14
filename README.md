@@ -1,4 +1,4 @@
-# docker-elasticsearch-circleci
+# docker-elasticsearch-circleci [![CircleCI](https://circleci.com/gh/kenju/docker-elasticsearch-circleci.svg?style=svg)](https://circleci.com/gh/kenju/docker-elasticsearch-circleci)
 
 Docker Image for Circle CI Build
 
