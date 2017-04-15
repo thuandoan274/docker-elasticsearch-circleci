@@ -12,6 +12,10 @@ jobs:
       IMAGE_TAG_TEST: kenju/elasticsearch-circleci:test
 
     steps:
+      # How to add ssh key described here (default = adding all keys set)
+      # https://circleci.com/docs/2.0/configuration-reference/#addsshkeys
+      - add_ssh_keys
+
       - checkout
 
       - setup_remote_docker
