@@ -12,6 +12,10 @@ jobs:
       IMAGE_TAG_TEST: kenju/elasticsearch-circleci:test
 
     steps:
+      # How to add ssh key described here (default = adding all keys set)
+      # https://circleci.com/docs/2.0/configuration-reference/#addsshkeys
+      - add_ssh_keys
+
       - checkout
 
       - setup_remote_docker
@@ -79,14 +83,19 @@ jobs:
           environment:
             BASE_TAG: kenju/elasticsearch-circleci
           command: |
-            TIMESTAMP=`date "+%Y%m%d%H%M"`
-            IMAGE_TAG_DEPLOY="$BASE_TAG:$TIMESTAMP"
-            LATEST_TAG="$BASE_TAG:latest"
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              TIMESTAMP=`date "+%Y%m%d%H%M"`
+              IMAGE_TAG_DEPLOY="$BASE_TAG:$TIMESTAMP"
+              LATEST_TAG="$BASE_TAG:latest"
 
-            docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+              docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
 
-            docker build -t $IMAGE_TAG_DEPLOY image/
-            docker push $IMAGE_TAG_DEPLOY
+              docker build -t $IMAGE_TAG_DEPLOY image/
+              docker push $IMAGE_TAG_DEPLOY
 
-            docker build -t $LATEST_TAG image/
-            docker push $LATEST_TAG
+              docker build -t $LATEST_TAG image/
+              docker push $LATEST_TAG
+
+              git tag $TIMESTAMP
+              git push --tags
+            fi
