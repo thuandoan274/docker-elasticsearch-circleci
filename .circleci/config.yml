@@ -14,7 +14,9 @@ jobs:
     steps:
       # How to add ssh key described here (default = adding all keys set)
       # https://circleci.com/docs/2.0/configuration-reference/#addsshkeys
-      - add_ssh_keys
+      - add_ssh_keys:
+          fingerprints:
+            - "ef:e5:62:ef:a7:9b:ec:ba:5d:0e:00:94:3d:6d:c0:1e"
 
       - checkout
 
