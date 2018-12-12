@@ -1,5 +1,5 @@
 FROM docker.elastic.co/elasticsearch/elasticsearch:6.2.4
-
+ENV ES_JAVA_OPTS="-Xms750m -Xmx750m"
 ADD elasticsearch.yml /usr/share/elasticsearch/config/
 
 USER root
